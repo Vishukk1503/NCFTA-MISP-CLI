@@ -1,0 +1,16 @@
+.env
+.env.*
+*.pem
+*.key
+*.json
+*.jsonl
+*.csv
+*.xlsx
+*.log
+outputs/
+logs/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
