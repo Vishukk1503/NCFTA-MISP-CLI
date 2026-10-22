@@ -1,0 +1,65 @@
+<mxfile host="Electron">
+  <diagram id="extraction" name="NCFTA Extraction">
+    <mxGraphModel dx="3541" dy="2071" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=left;fontSize=28;fontStyle=1;fontColor=#17324D;" value="NCFTA Intelligence Extraction" vertex="1">
+          <mxGeometry height="45" width="1150" x="60" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="sub" parent="1" style="text;html=1;align=left;fontSize=15;fontColor=#526579;" value="Read-only API extraction to local JSON, followed by a separate Excel conversion" vertex="1">
+          <mxGeometry height="30" width="1150" x="60" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="person" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#17324D;strokeWidth=2;fontSize=16;fontStyle=1;" value="Analyst" vertex="1">
+          <mxGeometry height="110" width="65" x="80" y="175" as="geometry" />
+        </mxCell>
+        <mxCell id="cli" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#E8F0FB;strokeColor=#5C83B4;fontSize=16;spacing=12;" value="&lt;b&gt;Run Python CLI&lt;/b&gt;&lt;br&gt;&lt;br&gt;Choose sharing group and date range&lt;br&gt;Enter API key at hidden prompt" vertex="1">
+          <mxGeometry height="125" width="330" x="280" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="misp" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#E2F0E8;strokeColor=#5C9274;fontSize=16;spacing=10;" value="&lt;b&gt;NCFTA MISP API&lt;/b&gt;&lt;br&gt;&lt;br&gt;Validate key and permissions&lt;br&gt;Return matching visible events" vertex="1">
+          <mxGeometry height="145" width="340" x="820" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="validate" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#E8F0FB;strokeColor=#5C83B4;fontSize=16;spacing=12;" value="&lt;b&gt;Validate and collect results&lt;/b&gt;&lt;br&gt;&lt;br&gt;Check event group and date&lt;br&gt;Fetch next pages until empty&lt;br&gt;Collect events and their attributes" vertex="1">
+          <mxGeometry height="145" width="340" x="820" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="json" parent="1" style="shape=note;whiteSpace=wrap;html=1;size=20;fillColor=#FFF3D6;strokeColor=#C3A052;fontSize=16;spacing=12;" value="&lt;b&gt;Local JSON export&lt;/b&gt;&lt;br&gt;&lt;br&gt;Event metadata and intelligence details&lt;br&gt;Saved after extraction finishes&lt;br&gt;No API key saved" vertex="1">
+          <mxGeometry height="145" width="330" x="280" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="convert" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;dashed=1;fillColor=#F0ECF8;strokeColor=#8B78AC;fontSize=16;spacing=12;" value="&lt;b&gt;Separate Excel conversion&lt;/b&gt;&lt;br&gt;&lt;br&gt;Read the saved JSON&lt;br&gt;Preserve event-to-attribute links" vertex="1">
+          <mxGeometry height="125" width="330" x="280" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="events" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#E2F0E8;strokeColor=#5C9274;fontSize=16;spacing=12;" value="&lt;b&gt;Excel: Events sheet&lt;/b&gt;&lt;br&gt;&lt;br&gt;One row per event&lt;br&gt;ID, title, date, group and metadata" vertex="1">
+          <mxGeometry height="115" width="340" x="820" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="attributes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#E2F0E8;strokeColor=#5C9274;fontSize=16;spacing=12;" value="&lt;b&gt;Excel: Attributes sheet&lt;/b&gt;&lt;br&gt;&lt;br&gt;One row per typed information item&lt;br&gt;Linked to Events by event_id" vertex="1">
+          <mxGeometry height="115" width="340" x="820" y="765" as="geometry" />
+        </mxCell>
+        <mxCell id="note" parent="1" style="text;html=1;align=left;whiteSpace=wrap;fontSize=13;fontColor=#526579;" value="Date filtering uses the MISP event date, which may differ from the crime date described in the intelligence.&lt;br&gt;TLS verification stays enabled. Attachment binary contents are not requested." vertex="1">
+          <mxGeometry height="50" width="1150" x="60" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="person" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#526579;fontSize=13;" target="cli" value="Run">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="cli" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#526579;fontSize=13;" target="misp" value="HTTPS API request&lt;br&gt;Group + date filters">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="misp" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#526579;fontSize=13;" target="validate" value="JSON response">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="validate" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#526579;fontSize=13;" target="json" value="Write completed export">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="json" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#8B78AC;fontSize=13;" target="convert" value="Local file input">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="convert" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#8B78AC;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" target="events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="convert" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#8B78AC;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" target="attributes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
