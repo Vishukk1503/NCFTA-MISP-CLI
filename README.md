@@ -45,3 +45,21 @@ JSON exports include returned attributes and objects; attachment binary contents
 - https://misp-standard.org/formats/core/
 - https://github.com/MISP/PyMISP
 
+
+## Offline CSV conversion
+
+Convert a saved export without contacting NCFTA:
+
+```console
+python ncfta_json_to_csv.py path/to/export.json --output-dir csv-export
+```
+
+Creates separate event and attribute CSVs. In the attribute CSV, `sharing_group_id` is the parent event's group; `attribute_sharing_group_id` and `attribute_distribution` preserve the attribute's own sharing settings. A group ID of 0 is preserved; interpret it together with distribution (for example, 5 means inherit event permissions).
+
+If either output CSV already exists, conversion fails without overwriting it. Choose another output directory for a new export. Newly created partial outputs are removed if conversion fails.
+
+Run regression tests:
+
+```console
+python -m unittest test_ncfta_json_to_csv.py -v
+```
