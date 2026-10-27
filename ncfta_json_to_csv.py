@@ -5,6 +5,7 @@ Original source JSON is never modified. Uses only Python standard library.
 """
 import argparse
 import csv
+from contextlib import contextmanager, ExitStack
 import json
 from pathlib import Path
 
@@ -17,7 +18,7 @@ EVENT_FIELDS = [
 ATTRIBUTE_FIELDS = EVENT_FIELDS[:-1] + [
     "attribute_id", "attribute_uuid", "attribute_type", "attribute_category",
     "attribute_value", "to_ids", "comment", "first_seen", "last_seen",
-    "attribute_timestamp", "attribute_distribution", "object_id",
+    "attribute_timestamp", "attribute_distribution", "attribute_sharing_group_id", "object_id",
     "object_uuid", "object_name", "object_meta_category", "object_relation",
 ]
 
@@ -100,6 +101,7 @@ def attribute_row(base, attr, obj=None):
         "last_seen": attr.get("last_seen"),
         "attribute_timestamp": attr.get("timestamp"),
         "attribute_distribution": attr.get("distribution"),
+        "attribute_sharing_group_id": attr.get("sharing_group_id"),
         "object_id": obj.get("id"),
         "object_uuid": obj.get("uuid"),
         "object_name": obj.get("name"),
@@ -109,17 +111,37 @@ def attribute_row(base, attr, obj=None):
     return {**base, **fields}
 
 
+@contextmanager
+def new_output_files(event_path, attr_path):
+    """Create both outputs exclusively; clean up only files created by this run."""
+    for path in (event_path, attr_path):
+        if path.exists():
+            raise FileExistsError(f"Output already exists: {path}. Choose a different --output-dir.")
+    created = []
+    try:
+        with ExitStack() as stack:
+            handles = []
+            for path in (event_path, attr_path):
+                handle = stack.enter_context(path.open("x", encoding="utf-8-sig", newline=""))
+                created.append(path)
+                handles.append(handle)
+            yield handles
+    except BaseException:
+        for path in created:
+            path.unlink(missing_ok=True)
+        raise
+
+
 def export_csv(source, output_dir):
     doc = json.loads(source.read_text(encoding="utf-8-sig"))
     fallback_group = doc.get("sharing_group_id", "") if isinstance(doc, dict) else ""
     events = list(events_from_document(doc))
     output_dir.mkdir(parents=True, exist_ok=True)
-    # Do not overwrite other exports; names are tied to the input filename.
+    # Existing exports are never replaced, including on a repeated conversion.
     event_path = output_dir / f"{source.stem}_events.csv"
     attr_path = output_dir / f"{source.stem}_attributes.csv"
     event_count = attr_count = 0
-    with event_path.open("w", encoding="utf-8-sig", newline="") as ef, \
-         attr_path.open("w", encoding="utf-8-sig", newline="") as af:
+    with new_output_files(event_path, attr_path) as (ef, af):
         ew = csv.DictWriter(ef, fieldnames=EVENT_FIELDS)
         aw = csv.DictWriter(af, fieldnames=ATTRIBUTE_FIELDS)
         ew.writeheader()
@@ -164,3 +186,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
