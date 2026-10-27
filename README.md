@@ -1,14 +1,20 @@
 # NCFTA MISP CLI
 
-Read-only Python tools for listing sharing groups and extracting authorized NCFTA MISP events. These scripts use `requests` directly, not PyMISP.
+Read-only Python tools for listing sharing groups and extracting authorized NCFTA MISP events using the official PyMISP client. The offline CSV converter uses only Python's standard library.
 
 ## Install
 
 Requires Python 3.10 or newer.
 
 ```console
-python -m pip install -r requirements.txt
+python -m pip install --upgrade -r requirements.txt
 ```
+
+Keep `ncfta_client.py` beside both CLI scripts. The shared client calls PyMISP's `sharing_groups()` and `search()` methods with dictionary responses to preserve the existing JSON format.
+
+PyMISP performs read-only startup checks for the recommended client version, server version, current user/role, and attribute types. NCFTA must permit those endpoints as well as the group/event endpoints. Live compatibility must be checked with your own key; automated tests mock the server and startup lookups.
+
+The shared HTTPS adapter refuses redirects, other origins, and write operations. Only GET requests and the read-only POST to `/events/restSearch` are allowed. PyMISP's response/header logging is suppressed during the connection to avoid printing credentials or returned intelligence.
 
 ## List groups
 
@@ -61,5 +67,7 @@ If either output CSV already exists, conversion fails without overwriting it. Ch
 Run regression tests:
 
 ```console
-python -m unittest test_ncfta_json_to_csv.py -v
+python -m unittest discover -p "test*.py" -v
 ```
+
+
