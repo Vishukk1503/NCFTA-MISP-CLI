@@ -8,7 +8,8 @@ from pathlib import Path
 import sys
 from urllib.parse import urlparse
 
-import requests
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ncfta_client import connect, NCFTAClientError
 
 
 def extract_events(body, group_id, limit, start=None, end=None):
@@ -69,34 +70,23 @@ def main():
     key = getpass.getpass('NCFTA API key (hidden input): ').strip()
     if not key:
         parser.error('API key required')
-    payload = {'returnFormat': 'json', 'sharinggroup': [str(args.group)],
+    payload = {'controller': 'events', 'return_format': 'json', 'sharinggroup': [args.group],
                'page': args.page, 'limit': args.limit,
-               'metadata': False, 'withAttachments': False}
+               'metadata': False, 'with_attachments': False, 'pythonify': False}
     if args.from_date:
-        payload['from'] = args.from_date.isoformat()
+        payload['date_from'] = args.from_date.isoformat()
     if args.to_date:
-        payload['to'] = args.to_date.isoformat()
+        payload['date_to'] = args.to_date.isoformat()
     print(f'Requesting up to {args.limit} events from sharing group {args.group}, page {args.page}...')
     try:
-        with requests.Session() as session:
-            session.headers.update({'Authorization': key, 'Accept': 'application/json',
-                                    'Content-Type': 'application/json'})
+        with connect(base, key, args.timeout, args.ca_bundle) as misp:
             events = []
             seen = set()
             page = args.page
             while True:
                 payload['page'] = page
-                response = session.post(base + '/events/restSearch', json=payload,
-                                        timeout=args.timeout, allow_redirects=False,
-                                        verify=str(args.ca_bundle) if args.ca_bundle else True)
-                print(f'Page {page}: HTTP {response.status_code}')
-                if response.status_code in (401, 403):
-                    print('Authentication or event-search access denied. No data saved.')
-                    return 1
-                if response.status_code != 200:
-                    print('Search unsuccessful. Redirects are refused; no data saved.')
-                    return 1
-                batch = extract_events(response.json(), args.group, args.limit, args.from_date, args.to_date)
+                response = misp.search(**payload)
+                batch = extract_events(response, args.group, args.limit, args.from_date, args.to_date)
                 for wrapper in batch:
                     identity = str(wrapper['Event']['id'])
                     if identity in seen:
@@ -107,11 +97,8 @@ def main():
                 if not args.all_pages or not batch:
                     break
                 page += 1
-    except requests.exceptions.SSLError:
-        print('TLS validation failed. Use --ca-bundle with a trusted CA PEM if required.')
-        return 1
-    except requests.exceptions.RequestException:
-        print('Network request failed. Check VPN, DNS, proxy, firewall, or timeout.')
+    except NCFTAClientError as exc:
+        print(str(exc))
         return 1
     except ValueError:
         print('Response did not pass JSON, sample-limit, or sharing-group validation. No data saved.')
@@ -160,4 +147,6 @@ def main():
 
 if __name__ == '__main__':
     raise SystemExit(main())
+
+
 
