@@ -8,7 +8,8 @@ import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
-import requests
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ncfta_client import connect, NCFTAClientError
 
 PRIORITY = {'6': 'Cyfin', '7': 'RAOLFI', '8': 'TNT', '9': 'DGA'}
 
@@ -76,27 +77,10 @@ def main(argv=None):
     if not key:
         parser.error('An API key is required')
     try:
-        with requests.Session() as session:
-            session.headers.update({'Authorization': key, 'Accept': 'application/json',
-                                    'User-Agent': 'NCFTA-ReadOnly-Group-Discovery/1.0'})
-            response = session.get(base + '/sharing_groups', timeout=args.timeout,
-                                   verify=str(args.ca_bundle) if args.ca_bundle else True,
-                                   allow_redirects=False)
-            if response.status_code in (401, 403):
-                print('Access denied: check the key, API permissions, VPN, and IP allowlisting.', file=sys.stderr)
-                return 1
-            if 300 <= response.status_code < 400:
-                print('Redirect refused. Check the endpoint; the API key was not forwarded.', file=sys.stderr)
-                return 1
-            if response.status_code != 200:
-                print(f'Group listing failed: HTTP {response.status_code}. No entitlement conclusion is possible.', file=sys.stderr)
-                return 1
-            groups = parse_groups(response.json())
-    except requests.exceptions.SSLError:
-        print('TLS verification failed. Supply a trusted --ca-bundle; verification remains enabled.', file=sys.stderr)
-        return 1
-    except requests.exceptions.RequestException:
-        print('Network request failed. Check DNS, VPN, firewall, proxy, and server availability.', file=sys.stderr)
+        with connect(base, key, args.timeout, args.ca_bundle) as misp:
+            groups = parse_groups(misp.sharing_groups(pythonify=False))
+    except NCFTAClientError as exc:
+        print(str(exc), file=sys.stderr)
         return 1
     except ValueError:
         # Never print a response body or exception containing request credentials.
@@ -133,4 +117,6 @@ def main(argv=None):
 
 if __name__ == '__main__':
     raise SystemExit(main())
+
+
 
