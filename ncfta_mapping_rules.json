@@ -1,0 +1,477 @@
+{
+  "rule_version": "1.0.0",
+  "label_normalization": "Trim, collapse whitespace and case-fold; no fuzzy matching.",
+  "number_convention": "Dot decimal, optional correctly grouped comma thousands. Preserve explicit currency symbols; no currency code or unit inferred.",
+  "narrative_policy": "Only explicit labels at line starts. Stop at semicolon or line end. Never auto-promote candidates.",
+  "rules": [
+    {
+      "id": "R001",
+      "source_type": "other",
+      "source_label": "Bank",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "bank_name",
+      "business_area": "Banking",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R002",
+      "source_type": "other",
+      "source_label": "Address",
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "address",
+      "business_area": "People and contacts",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R003",
+      "source_type": "other",
+      "source_label": "SSN",
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "ssn",
+      "business_area": "People and contacts",
+      "validator": "ssn",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R004",
+      "source_type": "other",
+      "source_label": "Company",
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "company_name",
+      "business_area": "People and contacts",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R005",
+      "source_type": "other",
+      "source_label": "Amount",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "reported_amount",
+      "business_area": "Banking",
+      "validator": "amount",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R006",
+      "source_type": "other",
+      "source_label": "Device Fingerprint",
+      "expected_categories": [
+        "Network activity"
+      ],
+      "field": "device_fingerprint",
+      "business_area": "Network",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R007",
+      "source_type": "other",
+      "source_label": "Shares",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "shares",
+      "business_area": "Trading",
+      "validator": "decimal",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R008",
+      "source_type": "other",
+      "source_label": "Stock",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "stock_symbol",
+      "business_area": "Trading",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R009",
+      "source_type": "other",
+      "source_label": "SWIFT",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "swift_code",
+      "business_area": "Banking",
+      "validator": "swift",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R010",
+      "source_type": "other",
+      "source_label": "Bank Location",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "bank_location",
+      "business_area": "Banking",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R011",
+      "source_type": "other",
+      "source_label": "PAN",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "card_pan",
+      "business_area": "Payment cards",
+      "validator": "pan",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R012",
+      "source_type": "other",
+      "source_label": "Card PAN",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "card_pan",
+      "business_area": "Payment cards",
+      "validator": "pan",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R013",
+      "source_type": "other",
+      "source_label": "BIN",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "card_bin",
+      "business_area": "Payment cards",
+      "validator": "bin",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R014",
+      "source_type": "other",
+      "source_label": "Card BIN",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "card_bin",
+      "business_area": "Payment cards",
+      "validator": "bin",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R015",
+      "source_type": "other",
+      "source_label": "Merchant Name",
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "merchant_name",
+      "business_area": "Merchants",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R016",
+      "source_type": "bank-account-nr",
+      "source_label": null,
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "bank_account_number",
+      "business_area": "Banking",
+      "validator": "account",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R017",
+      "source_type": "aba-rtn",
+      "source_label": null,
+      "expected_categories": [
+        "Financial fraud"
+      ],
+      "field": "routing_number",
+      "business_area": "Banking",
+      "validator": "routing",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R018",
+      "source_type": "threat-actor",
+      "source_label": null,
+      "expected_categories": [
+        "Attribution"
+      ],
+      "field": "reported_actor_name",
+      "business_area": "People and contacts",
+      "validator": "text",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R019",
+      "source_type": "phone-number",
+      "source_label": null,
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "phone_number",
+      "business_area": "People and contacts",
+      "validator": "phone",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R020",
+      "source_type": "ip-src",
+      "source_label": null,
+      "expected_categories": [
+        "Network activity"
+      ],
+      "field": "source_ip",
+      "business_area": "Network",
+      "validator": "ip",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R021",
+      "source_type": "ip-dst",
+      "source_label": null,
+      "expected_categories": [
+        "Network activity"
+      ],
+      "field": "destination_ip",
+      "business_area": "Network",
+      "validator": "ip",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R022",
+      "source_type": "email",
+      "source_label": null,
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "email_address",
+      "business_area": "People and contacts",
+      "validator": "email",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R023",
+      "source_type": "email-src",
+      "source_label": null,
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "email_address",
+      "business_area": "People and contacts",
+      "validator": "email",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R024",
+      "source_type": "date-of-birth",
+      "source_label": null,
+      "expected_categories": [
+        "Person"
+      ],
+      "field": "date_of_birth",
+      "business_area": "People and contacts",
+      "validator": "date",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R025",
+      "source_type": "user-agent",
+      "source_label": null,
+      "expected_categories": [
+        "Network activity"
+      ],
+      "field": "browser_user_agent",
+      "business_area": "Network",
+      "validator": "text",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R026",
+      "source_type": "domain",
+      "source_label": null,
+      "expected_categories": [
+        "Network activity"
+      ],
+      "field": "domain",
+      "business_area": "Network",
+      "validator": "domain",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R027",
+      "source_type": "url",
+      "source_label": null,
+      "expected_categories": [
+        "Network activity"
+      ],
+      "field": "url",
+      "business_area": "Network",
+      "validator": "url",
+      "description": "Match source type; check category and validate value."
+    },
+    {
+      "id": "R028",
+      "source_type": "datetime",
+      "source_label": "date/time of crime",
+      "expected_categories": [
+        "Other"
+      ],
+      "field": "crime_datetime",
+      "business_area": "Dates",
+      "validator": "datetime",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R029",
+      "source_type": "comment",
+      "source_label": "Reported By",
+      "expected_categories": [
+        "Internal reference"
+      ],
+      "field": "reporter",
+      "business_area": "Provenance",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    },
+    {
+      "id": "R030",
+      "source_type": "comment",
+      "source_label": "",
+      "expected_categories": [
+        "Other"
+      ],
+      "field": "case_description",
+      "business_area": "Narrative",
+      "validator": "text",
+      "description": "Match source type and normalized comment label; check category and validate value."
+    }
+  ],
+  "narrative_rules": [
+    {
+      "id": "N001",
+      "field": "card_pan",
+      "validator": "pan",
+      "labels": [
+        "card pan",
+        "pan",
+        "card number"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N002",
+      "field": "card_bin",
+      "validator": "bin",
+      "labels": [
+        "card bin",
+        "bin"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N003",
+      "field": "merchant_name",
+      "validator": "text",
+      "labels": [
+        "merchant name"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N004",
+      "field": "ssn",
+      "validator": "ssn",
+      "labels": [
+        "ssn",
+        "social security number"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N005",
+      "field": "routing_number",
+      "validator": "routing",
+      "labels": [
+        "routing number",
+        "aba routing number"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N006",
+      "field": "bank_account_number",
+      "validator": "account",
+      "labels": [
+        "bank account number",
+        "account number"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N007",
+      "field": "bank_name",
+      "validator": "text",
+      "labels": [
+        "bank name"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N008",
+      "field": "phone_number",
+      "validator": "phone",
+      "labels": [
+        "phone number",
+        "telephone number"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N009",
+      "field": "address",
+      "validator": "text",
+      "labels": [
+        "address"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    },
+    {
+      "id": "N010",
+      "field": "reported_actor_name",
+      "validator": "text",
+      "labels": [
+        "threat actor name"
+      ],
+      "business_area": "Narrative candidates",
+      "description": "Explicit label at line start followed by colon/equal sign; candidate only, human review required."
+    }
+  ]
+}
